@@ -6,7 +6,7 @@ function createPlayerPage(m3u8) {
 
 function attachHls(src, video) {
   if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = videoSrc
+    video.src = src
   } else if (Hls.isSupported()) {
     const hls = new Hls()
 

@@ -67,7 +67,7 @@ function detectVideoPage() {
 }
 
 function createPlayerPage(m3u8) {
-  window.open(`https://nico-stream.vercel.app/#${m3u8}`)
+  window.open(`https://nico-stream.vercel.app/#${m3u8}`, '_top')
 }
 
 ;(function () {
