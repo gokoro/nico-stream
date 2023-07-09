@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Nico-Stream
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  Get stream of nico for free
 // @author       You
 // @match        https://nicochannel.jp/*
 // @match        https://dazbee-fc.com/*
+// @match        https://canan8181.com/*
 // @require      https://cdn.jsdelivr.net/npm/hls.js@1
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
 // @grant        none
