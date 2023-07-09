@@ -10,37 +10,6 @@
 // @grant        none
 // ==/UserScript==
 
-const player = `
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Player</title>
-    <style>
-      body {
-        background: #000;
-      }
-      video {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0px;
-        right: 0px;
-        bottom: 0px;
-        left: 0px;
-        margin: auto;
-        max-height: 100%;
-        max-width: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <video controls></video>
-  </body>
-</html>
-`
-
 const createPayload = (data) => JSON.stringify(data)
 
 async function getSession(id) {
@@ -96,29 +65,7 @@ function detectVideoPage() {
 }
 
 function createPlayerPage(m3u8) {
-  const externalWindow = window.open()
-
-  externalWindow.document.write(player)
-  externalWindow.document.title = m3u8
-
-  const video = externalWindow.document.querySelector('video')
-
-  attachHls(m3u8, video)
-}
-
-function attachHls(src, video) {
-  if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = videoSrc
-  } else if (Hls.isSupported()) {
-    const hls = new Hls()
-
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      video.play()
-    })
-
-    hls.loadSource(src)
-    hls.attachMedia(video)
-  }
+  window.open(`https://nico-stream.vercel.app/#${m3u8}`)
 }
 
 ;(function () {
