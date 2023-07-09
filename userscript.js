@@ -1,13 +1,15 @@
 // ==UserScript==
 // @name         Nico-Stream
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Get stream of nico for free
 // @author       You
 // @match        https://nicochannel.jp/*
 // @require      https://cdn.jsdelivr.net/npm/hls.js@1
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
 // @grant        none
+// @updateURL    https://raw.githubusercontent.com/gokoro/nico-stream/main/userscript.js
+// @downloadURL  https://raw.githubusercontent.com/gokoro/nico-stream/main/userscript.js
 // ==/UserScript==
 
 const createPayload = (data) => JSON.stringify(data)
