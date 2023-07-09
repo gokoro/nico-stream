@@ -5,6 +5,7 @@
 // @description  Get stream of nico for free
 // @author       You
 // @match        https://nicochannel.jp/*
+// @match        https://dazbee-fc.com/*
 // @require      https://cdn.jsdelivr.net/npm/hls.js@1
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
 // @grant        none
@@ -15,7 +16,7 @@
 const createPayload = (data) => JSON.stringify(data)
 
 async function getSession(id) {
-  const url = `https://nfc-api.nicochannel.jp/fc/video_pages/${id}/session_ids`
+  const url = `https://nfc-api.${location.hostname}/fc/video_pages/${id}/session_ids`
 
   const res = await fetch(url, {
     method: 'POST',
@@ -57,9 +58,10 @@ async function openPrompt(contentID) {
 
 function detectVideoPage() {
   const components = window.location.href.split('/')
+  const length = components.length
 
-  const isVideo = components[4] === 'video'
-  const contentID = components[5]
+  const isVideo = components[length - 2] === 'video'
+  const contentID = components[length - 1]
 
   if (isVideo && contentID) {
     openPrompt(contentID)
