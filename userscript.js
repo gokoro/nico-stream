@@ -8,6 +8,7 @@
 // @match        https://dazbee-fc.com/*
 // @match        https://canan8181.com/*
 // @match        https://rnqq.jp/*
+// @match        https://kemomimirefle.net/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/gokoro/nico-stream/main/userscript.js
