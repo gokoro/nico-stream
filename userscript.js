@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nico-Stream
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.7
 // @description  Get stream of nico for free
 // @author       You
 // @match        https://nicochannel.jp/*
