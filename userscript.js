@@ -53,9 +53,7 @@ async function openPrompt(contentID) {
 
   const [, m3u8] = parsePlaylistData(playlist)
 
-  window.confirm('Are you sure to play this video stream in another window?')
-    ? createPlayerPage(m3u8)
-    : null
+  window.confirm('Are you sure to play this video stream in another window?') ? createPlayerPage(m3u8) : null
 }
 
 function detectVideoPage() {
