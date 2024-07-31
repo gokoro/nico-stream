@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nico-Stream
 // @namespace    http://tampermonkey.net/
-// @version      0.7
+// @version      0.8
 // @description  Get stream of nico for free
 // @author       You
 // @match        https://nicochannel.jp/*
@@ -9,6 +9,7 @@
 // @match        https://canan8181.com/*
 // @match        https://rnqq.jp/*
 // @match        https://kemomimirefle.net/*
+// @match        https://uise-official.com//*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/gokoro/nico-stream/main/userscript.js
