@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nico-Stream
 // @namespace    http://tampermonkey.net/
-// @version      0.8
+// @version      0.9
 // @description  Get stream of nico for free
 // @author       You
 // @match        https://nicochannel.jp/*
@@ -52,7 +52,7 @@ async function openPrompt(contentID) {
   const session = await getSession(contentID)
   const playlist = await getPlaylist(session)
 
-  const [, m3u8] = parsePlaylistData(playlist)
+  const [m3u8] = parsePlaylistData(playlist)
 
   window.confirm('Are you sure to play this video stream in another window?') ? createPlayerPage(m3u8) : null
 }
