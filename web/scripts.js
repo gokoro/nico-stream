@@ -42,6 +42,16 @@ function attachHls(video, payload) {
       const skipTime = details.seekOffset || defaultSkipTime
       video.currentTime = Math.min(video.currentTime + skipTime, video.duration)
     })
+
+    navigator.mediaSession.setActionHandler('seekto', (details) => {
+      if (details.fastSeek && 'fastSeek' in video) {
+        // Only use fast seek if supported.
+        video.fastSeek(details.seekTime)
+        return
+      }
+      video.currentTime = details.seekTime
+      // TODO: Update playback state.
+    })
   }
 }
 
