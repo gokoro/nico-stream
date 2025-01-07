@@ -1,23 +1,58 @@
-function createPlayerPage(m3u8) {
-  const video = document.querySelector('video')
+function decodeParams(params) {
+  const url = new URLSearchParams(params)
+  const payload = {}
 
-  attachHls(m3u8, video)
+  url.forEach((v, k) => (payload[k] = v))
+
+  return payload
 }
 
-function attachHls(src, video) {
-  if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = src
-  } else if (Hls.isSupported()) {
-    const hls = new Hls()
+function openPlayerPage(payload) {
+  const video = document.querySelector('video')
 
-    hls.loadSource(src)
-    hls.attachMedia(video)
+  attachHls(video, payload)
+}
+
+function attachHls(video, payload) {
+  if (!Hls.isSupported()) {
+    return
+  }
+
+  const src = payload.m3u8
+
+  const hls = new Hls()
+
+  hls.loadSource(src)
+  hls.attachMedia(video)
+
+  if ('mediaSession' in navigator) {
+    const defaultSkipTime = 10
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: payload.title,
+      artist: payload.artist,
+    })
+
+    navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+      const skipTime = details.seekOffset || defaultSkipTime
+      video.currentTime = Math.max(video.currentTime - skipTime, 0)
+    })
+
+    navigator.mediaSession.setActionHandler('seekforward', (details) => {
+      const skipTime = details.seekOffset || defaultSkipTime
+      video.currentTime = Math.min(video.currentTime + skipTime, video.duration)
+    })
   }
 }
 
 function initializePlayer() {
-  const m3u8 = location.hash.replace('#', '')
-  createPlayerPage(m3u8)
+  const params = location.hash.slice(1)
+  const payload = decodeParams(params)
+
+  openPlayerPage(payload)
 }
+
+navigator.mediaSession.setActionHandler('nexttrack', null)
+navigator.mediaSession.setActionHandler('previoustrack', null)
 
 addEventListener('load', initializePlayer)
