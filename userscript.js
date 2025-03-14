@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nico-Stream
 // @namespace    http://tampermonkey.net/
-// @version      0.13
+// @version      0.14
 // @description  Get stream of nico for free
 // @author       You
 // @match        https://nicochannel.jp/*
@@ -12,6 +12,7 @@
 // @match        https://uise-official.com/*
 // @match        https://nightmare-salon.com/*
 // @match        https://muneatsu-fc.com/*
+// @match        https://rizuna-official.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
 // @grant        GM.openInTab
 // @grant        GM_info
