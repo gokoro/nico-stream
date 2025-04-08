@@ -23,27 +23,58 @@
 const LOCAL_PLAYER_ENDPOINT = 'http://127.0.0.1:5500/web'
 const EXTERNAL_PLAYER_ENDPOINT = 'https://nico-stream.vercel.app'
 
-function buildUrlParams(data) {
+type StreamMetadata = {
+  title: string
+  artist: string
+  m3u8: string
+}
+
+function buildUrlParams(data: StreamMetadata) {
   const url = new URLSearchParams()
 
   for (const key in data) {
-    url.set(key, data[key])
+    url.set(key, data[key as keyof StreamMetadata])
   }
 
   return url
 }
 
 function isLocal() {
-  return GM_info.scriptWillUpdate
+  return import.meta.env.MODE === 'development'
 }
 
 function getPlayerEndpoint() {
   return isLocal() ? LOCAL_PLAYER_ENDPOINT : EXTERNAL_PLAYER_ENDPOINT
 }
 
-const createPayload = (data) => JSON.stringify(data)
+const createPayload = (data: object) => JSON.stringify(data)
 
-async function getMetadata(id) {
+async function getFcSiteId(): Promise<string> {
+  const isNicoBased = location.hostname === 'nicochannel.jp'
+
+  if (isNicoBased) {
+    const url =
+      'https://api.nicochannel.jp/fc/content_providers/channel_domain?current_site_domain=https:%2F%2Fnicochannel.jp%2F' +
+      location.pathname.split('/')[1]
+
+    const res = await fetch(url)
+    const {
+      data: {
+        content_providers: { id },
+      },
+    } = await res.json()
+
+    return id
+  } else {
+    const { fanclub_site_id } = await getSettingJson()
+    return fanclub_site_id as string
+  }
+}
+
+async function getMetadata(id: string): Promise<StreamMetadata> {
+  const fc_site_id = await getFcSiteId()
+  console.log(' fc_site_id:', fc_site_id)
+
   const url = `https://api.${location.hostname}/fc/video_pages/${id}`
 
   const res = await fetch(url, {
@@ -51,6 +82,7 @@ async function getMetadata(id) {
 
     headers: {
       'Content-Type': 'application/json',
+      fc_site_id,
       fc_use_device: 'null',
     },
   })
@@ -66,10 +98,19 @@ async function getMetadata(id) {
   return {
     title,
     artist,
+    m3u8: '',
   }
 }
 
-async function getSession(id) {
+async function getSettingJson() {
+  const url = '/site/settings.json'
+
+  const res = await fetch(url)
+
+  return await res.json()
+}
+
+async function getSession(id: string) {
   const url = `https://nfc-api.${location.hostname}/fc/video_pages/${id}/session_ids`
 
   const res = await fetch(url, {
@@ -86,11 +127,11 @@ async function getSession(id) {
   return data.session_id
 }
 
-function buildPlaylistUrl(session) {
+function buildPlaylistUrl(session: string) {
   return `https://hls-auth.cloud.stream.co.jp/auth/index.m3u8?session_id=${session}`
 }
 
-function getVideoContentID(url) {
+function getVideoContentID(url: string) {
   const components = url.split('/')
   const length = components.length
 
@@ -100,7 +141,7 @@ function getVideoContentID(url) {
   return isVideo && contentID
 }
 
-async function onPageChange(url) {
+async function onPageChange(url: string) {
   const contentID = getVideoContentID(url)
 
   if (!contentID) {
@@ -116,7 +157,7 @@ async function onPageChange(url) {
     : null
 }
 
-function openPlayerPage(m3u8, metadata) {
+function openPlayerPage(m3u8: string, metadata: StreamMetadata) {
   metadata.m3u8 = m3u8
 
   const params = buildUrlParams(metadata)
@@ -125,6 +166,9 @@ function openPlayerPage(m3u8, metadata) {
 }
 
 ;(function () {
-  window.addEventListener('load', (e) => onPageChange(e.currentTarget.location.href))
+  // @ts-ignore
+  window.addEventListener('load', (e) => onPageChange(e.currentTarget?.location.href))
+
+  // @ts-ignore
   window.navigation.addEventListener('navigate', (e) => onPageChange(e.destination.url))
 })()
